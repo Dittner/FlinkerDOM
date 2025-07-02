@@ -1,0 +1,49 @@
+{
+  "name": "flinker-dom",
+  "description": "Free TypeScript library for writing frontend apps",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dittner/FlinkerDOM.git"
+  },
+  "keywords": [
+    "flinker, web framework, RX.ts"
+  ],
+  "author": "Alexander Dittner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dittner/FlinkerDOM/issues"
+  },
+  "homepage": "https://github.com/Dittner/FlinkerDOM",
+  "private": false,
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist/",
+    "index.ts",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && npm run build:esm",
+    "build:esm": "tsc --module es2020 --target es2020 --outDir dist/esm"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "flinker": "^2.0.3",
+    "typescript": "~5.7.2"
+  },
+  "peerDependencies": {
+  }
+}
