@@ -1,3 +1,3 @@
 export { StyleSheetProcessor, PseudoClassType, PseudoClass } from "./processor";
-export { RulePriority, buildClassName, buildRule, UIComponentProps } from "./core";
+export { RulePriority, buildClassName, buildRule, BorderStyle, PointerEventsStyle, FontWeight, UIComponentProps } from "./core";
 export { HtmlTag, AnyUIComponent, ObserveAffect, UIComponent, StackHAlign, StackVAlign, StackProps, vstack, vstackMapper, hstack, hstackMapper, TextProps, Text, div, p, span, h1,h2,h3,h4,h5,h6, ButtonProps, Button, btn, LinkProps, LinkBtn, link, SwitcherProps, switcher, observer, OnReceiver, List, vlist, hlist, SpacerProps, spacer, ImageProps, Image, image, InputType, InputMode, TurnType, InputProps, Input, input, textarea } from "./components";

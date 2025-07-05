@@ -131,10 +131,8 @@ export class UIComponent<P extends UIComponentProps> {
         this.instantiateChildrenFn()
         UIComponent.activeParent = p
       }
-    }
-
-    if (this.affectSet.has('affectsChildrenProps')) {
-      this.childrenColl?.forEach(c => c.render('affectsChildrenProps'))
+    } else if (this.affectSet.has('affectsChildrenProps')) {
+      this.childrenColl?.forEach(c => c.render('affectsProps', 'affectsChildrenProps'))
     }
 
     if (this.affectSet.size > 0) {
@@ -635,9 +633,9 @@ class Observer<T> extends UIComponent<UIComponentProps> implements OnReceiver<T>
 
   protected override didDomUpdate(): void {
     super.didDomUpdate()
-    if (this.affectSet.has('affectsChildrenProps')) {
-      if (this.instance && !this.instance.isDestroyed)
-        this.instance.render('affectsProps', 'affectsChildrenProps')
+    if (this.instance && !this.instance.isDestroyed) {
+      if (this.affectSet.has('affectsProps')) this.instance.render('affectsProps')
+      if (this.affectSet.has('affectsChildrenProps')) this.instance.render('affectsChildrenProps')
     }
   }
 
