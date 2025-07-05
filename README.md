@@ -33,7 +33,7 @@ npm install
 
 4. Let's write our simple application:
 ```html
-<!-- intex.html-->
+<!-- index.html-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -246,7 +246,7 @@ export const Icon = <P extends IconProps>() => {
       s.className = 'material_icon'
       s.textSelectable = false
     })
-    .map(s => s.text = s.value) // is called after react-functions
+    .map(s => s.text = s.value) // is called after all react-functions
 }
 
 export enum MaterialIcon {
