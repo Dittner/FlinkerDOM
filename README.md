@@ -6,7 +6,7 @@ __FD__
 
 + does not use a virtual DOM;
 
-+ does not use TSX-files;
++ does not use TSX/JSX-files;
 
 + uses dynamic CSS rules and CSS selectors caching, does not generate Inline Styles;
 
@@ -526,6 +526,10 @@ export class Input<P extends InputProps> extends UIComponent<P> {
 
 export const input = <P extends InputProps>(type: InputType = 'text') => {
   return new Input<P>('input').react(s => s.type = type)
+}
+
+export const textarea = <P extends InputProps>() => {
+  return new Input<P>('textarea').react(s => s.type = 'text')
 }
 ```
 

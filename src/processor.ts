@@ -79,11 +79,18 @@ export class StyleSheetProcessor {
   private readonly list = Array.of<PseudoClass>()
 
   constructor(styleSheet: CSSStyleSheet) {
-    this.list.push(new NoPseudoClass(styleSheet))
-    this.list.push(new HoverPseudoClass(styleSheet))
-    this.list.push(new FocusPseudoClass(styleSheet))
-    this.list.push(new PlaceholderPseudoClass(styleSheet))
-    this.list.forEach(c => this.hash.set(c.type, c))
+    const all: PseudoClassType[] = ['none', 'hover', 'focus', 'placeholder']
+    all.forEach(t => {
+      if (t === 'hover') {
+        const pc = new HoverPseudoClass(styleSheet)
+        this.hash.set('hover', pc)
+        this.list.push(pc)
+      } else {
+        const pc = new PseudoClass(t, styleSheet)
+        this.hash.set(t, pc)
+        this.list.push(pc)
+      }
+    })
   }
 
   setValue(to: PseudoClassType, key: string, value: string, priority: RulePriority, appendToClassName: boolean = true) {
@@ -122,7 +129,10 @@ export class PseudoClass {
   }
 
   insertRule(className: string, tag: string) {
-    throw new Error('Abstract method PseudoClass:insertRule should be overwritten')
+    if (this.style) {
+      const rule = tag + '.' + className + (this.type === 'none' ? '' : ':' + this.type) + '{' + this.style + '}'
+      this.styleSheet.insertRule(rule)
+    }
   }
 
   setValue(key: string, value: string, priority: RulePriority, appendToClassName: boolean = true) {
@@ -146,19 +156,6 @@ export class PseudoClass {
   }
 }
 
-class NoPseudoClass extends PseudoClass {
-  constructor(styleSheet: CSSStyleSheet) {
-    super('none', styleSheet)
-  }
-
-  insertRule(className: string, tag: string) {
-    if (this.style) {
-      const rule = tag + '.' + className + '{' + this.style + '}'
-      this.styleSheet.insertRule(rule)
-    }
-  }
-}
-
 class HoverPseudoClass extends PseudoClass {
   readonly isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
 
@@ -170,31 +167,6 @@ class HoverPseudoClass extends PseudoClass {
     if (this.style) {
       const rule = tag + '.' + className + (this.isMobileDevice ? ':active{' : ':hover{') + this.style + '}'
       this.styleSheet.insertRule(rule)
-    }
-  }
-}
-
-class FocusPseudoClass extends PseudoClass {
-  constructor(styleSheet: CSSStyleSheet) {
-    super('focus', styleSheet)
-  }
-
-  insertRule(className: string, tag: string) {
-    if (this.style) {
-      const rule = tag + '.' + className + ':focus{' + this.style + '}'
-      this.styleSheet.insertRule(rule)
-    }
-  }
-}
-
-class PlaceholderPseudoClass extends PseudoClass {
-  constructor(styleSheet: CSSStyleSheet) {
-    super('placeholder', styleSheet)
-  }
-
-  insertRule(className: string, tag: string) {
-    if (this.style) {
-      this.styleSheet.insertRule(tag + '.' + className + '::placeholder{' + this.style + '}')
     }
   }
 }

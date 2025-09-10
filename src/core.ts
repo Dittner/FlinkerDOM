@@ -209,9 +209,9 @@ export const buildClassName = (props: any, pc: PseudoClassType, tag = ''): strin
   return 'className' in props && props.className ? props.className + ' ' + getClassName(tag) : getClassName(tag)
 }
 
-export const buildRule = (props: any, parentSelector: string, childSelector: string): void => {
+export const buildRule = (props: any, parentSelector: string, childSelector: string, pc: PseudoClassType = 'none'): void => {
   const { reset, operator, addRule } = ruleBuilder
-  reset('none', 'low')
+  reset(pc, 'low')
 
   for (const k of [...Object.keys(props)].sort(sortKeys)) {
     if (operator[k]) {
@@ -226,13 +226,13 @@ export type PointerEventsStyle = 'auto' | 'none' | 'visiblePainted' | 'visibleFi
 export type FontWeight = 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900' | 'inherit'
 
 export interface UIComponentProps {
-  alignItems?: 'normal' | 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'baseline'
+  alignItems?: 'normal' | 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'baseline' | 'inherit'
   animate?: string //'background-color 300ms'
   animateAll?: string //'300ms'
   bgColor?: string
-  bgImageAttachment?: 'scroll' | 'fixed' | 'unset'
-  bgImageRepeat?: 'no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y' | 'unset' | 'space'
-  bgImageSize?: 'cover' | 'contain' | 'auto'
+  bgImageAttachment?: 'scroll' | 'fixed' | 'unset' | 'inherit'
+  bgImageRepeat?: 'no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y' | 'unset' | 'space' | 'inherit'
+  bgImageSize?: 'cover' | 'contain' | 'auto' | 'inherit'
   bgImageSrc?: string
   blur?: string //15px
   borderColor?: string
@@ -242,26 +242,26 @@ export interface UIComponentProps {
   borderRight?: string | [string, BorderStyle, string]
   borderTop?: string | [string, BorderStyle, string]
   bottom?: string
-  boxSizing?: 'border-box' | 'content-box'
+  boxSizing?: 'border-box' | 'content-box' | 'inherit'
   caretColor?: string
   children?: any
   className?: string
   cornerRadius?: string
-  cursor?: 'auto' | 'pointer' | 'wait' | 'crosshair' | 'not-allowed' | 'zoom-in' | 'grab'
+  cursor?: 'auto' | 'pointer' | 'wait' | 'crosshair' | 'not-allowed' | 'zoom-in' | 'grab' | 'inherit'
   disableHorizontalScroll?: boolean
   disableScroll?: boolean
-  display?: 'none' | 'block' | 'inline' | 'inline-block' | 'flex' | 'grid'
+  display?: 'none' | 'block' | 'inline' | 'inline-block' | 'flex' | 'grid' | 'inherit'
   enableOwnScroller?: boolean
-  flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
+  flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse' | 'inherit'
   flexGrow?: number
   fontFamily?: string
   fontSize?: string
-  fontStyle?: 'normal' | 'italic'
+  fontStyle?: 'normal' | 'italic' | 'inherit'
   fontWeight?: FontWeight
   gap?: string
   height?: string
   id?: string
-  justifyContent?: 'normal' | 'stretch' | 'start' | 'center' | 'end' | 'flex-start' | 'flex-end' | 'left' | 'right' | 'space-between' | 'space-around'
+  justifyContent?: 'normal' | 'stretch' | 'start' | 'center' | 'end' | 'flex-start' | 'flex-end' | 'left' | 'right' | 'space-between' | 'space-around' | 'inherit'
   keyValue?: string
   layer?: string //z-index
   left?: string
@@ -281,7 +281,7 @@ export interface UIComponentProps {
   minWidth?: string
   opacity?: string
   outline?: string | [string, string, string]
-  overflow?: 'auto' | 'hidden' | 'clip'
+  overflow?: 'auto' | 'hidden' | 'clip' | 'inherit'
   padding?: string
   paddingBottom?: string
   paddingHorizontal?: string
@@ -289,22 +289,22 @@ export interface UIComponentProps {
   paddingRight?: string
   paddingTop?: string
   paddingVertical?: string
-  position?: 'static' | 'absolute' | 'relative' | 'fixed' | 'sticky'
+  position?: 'static' | 'absolute' | 'relative' | 'fixed' | 'sticky' | 'inherit'
   popUp?: string
   right?: string
   shadow?: string // offset-x | offset-y | blur-radius | spread-radius | color
-  textAlign?: 'left' | 'right' | 'center' | 'justify'
+  textAlign?: 'left' | 'right' | 'center' | 'justify' | 'inherit'
   textColor?: string
-  textDecoration?: 'none' | 'underline'
+  textDecoration?: 'none' | 'underline' | 'inherit'
   textIndent?: string
-  textTransform?: 'none' | 'uppercase' | 'capitalize' | 'lowercase'
+  textTransform?: 'none' | 'uppercase' | 'capitalize' | 'lowercase' | 'inherit'
   textShadow?: string //offset-x | offset-y | blur-radius | color
-  textOverflow?: 'auto' | 'ellipsis' | 'clip' | 'fade'
+  textOverflow?: 'auto' | 'ellipsis' | 'clip' | 'fade' | 'inherit'
   textSelectable?: boolean
   transform?: string
   top?: string
   visible?: boolean
-  whiteSpace?: 'normal' | 'pre' | 'pre-wrap' | 'nowrap'
+  whiteSpace?: 'normal' | 'pre' | 'pre-wrap' | 'nowrap' | 'inherit'
   width?: string
   wrap?: boolean
   pseudo?: Record<PseudoClassType, Record<string, any>>
