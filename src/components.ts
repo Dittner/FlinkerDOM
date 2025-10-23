@@ -17,7 +17,7 @@ export class UIComponent<P extends UIComponentProps> {
 
   readonly tag: HtmlTag
   dom: HTMLElement
-  protected childrenColl: AnyUIComponent[] | undefined
+  childrenColl: AnyUIComponent[] | undefined
 
   constructor(tag: HtmlTag) {
     this.tag = tag
@@ -81,12 +81,8 @@ export class UIComponent<P extends UIComponentProps> {
     this.dom.appendChild(c.dom)
   }
 
-  /*
-   * 
-   * Rendering
-   * 
-   */
-
+  // Rendering
+  
   protected willDomUpdate = false
   protected affectSet = new Set<ObserveAffect>()
   render(affect1: ObserveAffect, affect2?: ObserveAffect) {
@@ -661,44 +657,80 @@ export const observer = <T>(rx: RXObservable<T, any>): OnReceiver<T> => {
 *
 **/
 
-
 export class List<T, P extends UIComponentProps> extends UIComponent<P> {
   constructor(tag: HtmlTag) {
     super(tag)
     this.childrenColl = []
   }
 
-  private itemsFn?: () => T[] = undefined
+  private _itemsFn?: () => T[] = undefined
   items(fn: () => T[]) {
-    this.itemsFn = fn
+    this._itemsFn = fn
+    this.render('recreateChildren')
     return this
   }
 
   private _itemRenderer: (item: T, index: number) => AnyUIComponent = (item: T) => p().react(state => state.text = item as string)
   itemRenderer(fn: (item: T, index: number) => AnyUIComponent) {
     this._itemRenderer = fn
+    this.render('recreateChildren')
     return this
   }
 
-  private equalsFn: (a: T, b: T) => boolean = (a, b) => a === b
-  equals(fn: (a: T, b: T) => boolean) {
-    this.equalsFn = fn
+  private _itemHashFn: (item: T) => any = (item) => item
+  itemHash(fn: (item: T) => any) {
+    this._itemHashFn = fn
+    this.render('recreateChildren')
     return this
   }
 
-  private _items: T[] = []
-  protected override didDomUpdate() {
-    super.didDomUpdate()
-    const actualItems = this.itemsFn ? [...this.itemsFn()] : []
+  protected override updateDom() {
+    if (this.isDestroyed) return
+    if (!this.willDomUpdate) return
+
+    this.willDomUpdate = false
+
+    if (this.affectSet.has('affectsProps')) {
+      this.updateProps()
+
+      if (this.props.visible === false) {
+        this.dom.hidden = true
+        this.dom.className = ''
+      } else {
+        const cn = buildClassName(this.props, 'none')
+        this.dom.className = cn
+        this.dom.hidden = false
+      }
+    }
+
+    if (this.affectSet.has('recreateChildren')) {
+      this.recreateChildren()
+    }
+
+    if (this.affectSet.has('affectsChildrenProps')) {
+      this.childrenColl?.forEach(c => c.render('affectsProps', 'affectsChildrenProps'))
+    }
+
+    if (this.affectSet.size > 0) {
+      this.didDomUpdate()
+      this.affectSet.clear()
+    }
+  }
+
+  private _oldItemsHash: any[] = []
+  private recreateChildren() {
+    const actualItemsHash: any[] = []
+    const actualItems = this._itemsFn ? [...this._itemsFn()] : []
     const actualChildren = []
     let index = 0
     if (!this.childrenColl) this.childrenColl = []
 
     while (index < actualItems.length) {
       const actualItem = actualItems[index]
+      const actualItemHash = this._itemHashFn(actualItem)
       const oldVN = this.childrenColl[index]
-      if (index < this._items.length) {
-        if (this.equalsFn(this._items[index], actualItem)) {
+      if (index < this._oldItemsHash.length) {
+        if (actualItemHash === this._oldItemsHash[index]) {
           actualChildren.push(oldVN)
         } else {
           const newVN = this._itemRenderer(actualItem, index)
@@ -711,6 +743,7 @@ export class List<T, P extends UIComponentProps> extends UIComponent<P> {
         this.dom.appendChild(newVN.dom)
         actualChildren.push(newVN)
       }
+      actualItemsHash.push(actualItemHash)
       index++
     }
 
@@ -718,7 +751,7 @@ export class List<T, P extends UIComponentProps> extends UIComponent<P> {
       this.childrenColl.slice(index).forEach(n => n.destroy())
     }
     this.childrenColl = actualChildren
-    this._items = actualItems
+    this._oldItemsHash = actualItemsHash
   }
 }
 

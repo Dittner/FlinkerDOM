@@ -86,7 +86,7 @@ export class StyleSheetProcessor {
         this.hash.set('hover', pc)
         this.list.push(pc)
       } else {
-        const pc = new PseudoClass(t, styleSheet)
+        const pc = new PseudoClass(t, styleSheet, t === 'placeholder' ? '::' : ':')
         this.hash.set(t, pc)
         this.list.push(pc)
       }
@@ -121,16 +121,18 @@ export class PseudoClass {
   readonly styleSheet: CSSStyleSheet
   style: string
   hashSum: string
-  constructor(type: PseudoClassType, styleSheet: CSSStyleSheet) {
+  readonly divider: string
+  constructor(type: PseudoClassType, styleSheet: CSSStyleSheet, divider:string = ':') {
     this.type = type
     this.styleSheet = styleSheet
     this.style = ''
     this.hashSum = ''
+    this.divider = divider
   }
 
   insertRule(className: string, tag: string) {
     if (this.style) {
-      const rule = tag + '.' + className + (this.type === 'none' ? '' : ':' + this.type) + '{' + this.style + '}'
+      const rule = tag + '.' + className + (this.type === 'none' ? '' : this.divider + this.type) + '{' + this.style + '}'
       this.styleSheet.insertRule(rule)
     }
   }
