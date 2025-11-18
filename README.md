@@ -22,7 +22,7 @@ npm create vite@latest project-name -- --template vanilla-ts
 ```json
 "dependencies": {
     "flinker": "^2.0.4",
-    "flinker-dom": "^1.0.4"
+    "flinker-dom": "^1.1.2"
 }
 ```
 
@@ -314,90 +314,7 @@ IconBtn()
   })
 ```
 
-## Example 4: List
-Lists manages re-rendering of its components. If we add to the end of the list a new component, the previous ones will not be re-created or re-rendered.
-
-Let's create a simple ToDo App. 
-
-```ts
-// Model.ts
-export interface Task {
-  id: number
-  text: string
-}
-
-export class ToDoModel {
-  readonly $tasks = new RXSubject<Task[], never>([])
-
-  private lastTaskId = 0
-  createTask(text: string) {
-    this.$tasks.value.push({ id: this.lastTaskId++, text })
-    this.$tasks.resend()
-    // using resend-method, all subscribers to the $tasks
-    // will be notified even if the $tasks.value remains the same.
-    // Therefore we are using RXSubject instead of RXObservableValue
-  }
-}
-```
-
-Our view contains a list of tasks:
-
-```ts
-// App.ts
-const model = new ToDoModel()
-
-const TodoList = () => {
-  return vstack().children(() => {
-    vlist<Task>()
-      .observe(model.$tasks)
-      .items(() => model.$tasks.value) // will be re-called if model.$tasks changes
-      .itemRenderer(TaskView)
-
-    btn()
-      .react(s => {
-        s.bgColor = '#222222'
-        s.padding = '10px'
-        s.cornerRadius = '4px'
-        s.text = '+ New Task'
-      })
-      .onClick(() => {
-        model.createTask('New Task')
-      })
-    })
-}
-
-const TaskView = (t: Task) => {
-  return p()
-    .react(s => s.text = t.text)
-}
-```
-
-When model.$tasks changes vlist call items function to get tasks. Then vlist compares two lists of the tasks before and after changes. If different items are found for the same index, the previous component will be removed from the dom-tree and the new one will be added. By default, strict equality (===) is used to compare two elements. We can override this behavior, using equals method:
-
-```ts
-vlist<Task>()
-  .observe(model.$tasks)
-  .items(() => model.$tasks.value)
-  .equals((a, b) => a.id === b.id)
-  .itemRenderer(TaskView)
-```
-
-Vlist can be stylized as vstack:
-```ts
-vlist<Task>()
-  .observe(model.$tasks)
-  .items(() => model.$tasks.value)
-  .itemRenderer(TaskView)
-  .react(s => {
-    s.width = '100%'
-    s.halign = 'left'
-    s.valign = 'center'
-    s.gap = '10px'
-    s.padding = '20px'
-  })
-```
-
-## Example 5: Affects
+## Example 4: Affects
 By observing changes we can clearly specify what reactions (ObserveAffect) should follow. We have three types of affects:
 
 + __affectsProps__ (default) — only styles and props of the component will be updated, that has called an `observe`-method;
@@ -473,6 +390,90 @@ const DocView = ($doc: RXObservableValue<Doc | undefined>) => {
 }
 ```
 
+## Example 5: List
+Lists manages re-rendering of its components. If we add to the end of the list a new component, the previous ones will not be re-created or re-rendered.
+
+Let's create a simple ToDo App. 
+
+```ts
+// Model.ts
+export interface Task {
+  id: number
+  text: string
+}
+
+export class ToDoModel {
+  readonly $tasks = new RXSubject<Task[], never>([])
+
+  private lastTaskId = 0
+  createTask(text: string) {
+    this.$tasks.value.push({ id: this.lastTaskId++, text })
+    this.$tasks.resend()
+    // using resend-method, all subscribers to the $tasks
+    // will be notified even if the $tasks.value remains the same.
+    // Therefore we are using RXSubject instead of RXObservableValue
+  }
+}
+```
+
+Our view contains a list of tasks:
+
+```ts
+// App.ts
+const model = new ToDoModel()
+
+const TodoList = () => {
+  return vstack().children(() => {
+    vlist<Task>()
+      .observe(model.$tasks, 'recreateChildren')
+      .items(() => model.$tasks.value) // will be re-called if model.$tasks changes
+      .itemRenderer(TaskView)
+
+    btn()
+      .react(s => {
+        s.bgColor = '#222222'
+        s.padding = '10px'
+        s.cornerRadius = '4px'
+        s.text = '+ New Task'
+      })
+      .onClick(() => {
+        model.createTask('New Task')
+      })
+    })
+}
+
+const TaskView = (t: Task) => {
+  return p()
+    .react(s => s.text = t.text)
+}
+```
+
+When model.$tasks changes vlist call items function to get tasks. Then vlist compares two lists of the tasks before and after changes. If different items are found for the same index, the previous component will be removed from the dom-tree and the new one will be added. By default, strict equality (===) is used to compare two elements. We can override this behavior, using itemHash method:
+
+```ts
+vlist<Task>()
+  .observe(model.$tasks)
+  .items(() => model.$tasks.value)
+  .itemHash((t: Task) => t.id)
+  .itemRenderer(TaskView)
+```
+
+Vlist can be stylized as vstack:
+```ts
+vlist<Task>()
+  .observe(model.$tasks, 'recreateChildren')
+  .items(() => model.$tasks.value)
+  .itemRenderer(TaskView)
+  .react(s => {
+    // to update the style of the list use observe($someObservableValue, 'affectsProps')
+    s.width = '100%'
+    s.halign = 'left'
+    s.valign = 'center'
+    s.gap = '10px'
+    s.padding = '20px'
+  })
+```
+
 ## Example 6: Input
 input and textarea components use binding mechanism for bidirectional text updating:
 
@@ -533,7 +534,7 @@ export const textarea = <P extends InputProps>() => {
 }
 ```
 
-## List of standard components (v.1.0):
+## List of standard components (v.1.1.2):
 + div
 + p
 + span
