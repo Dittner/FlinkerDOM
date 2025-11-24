@@ -66,10 +66,10 @@ export class UIComponent<P extends UIComponentProps> {
     return this
   }
 
-  private instantiateChildrenFn?: () => void
+  private instantiateChildren = Array<() => void>()
   children(fn: () => void) {
-    if (this.instantiateChildrenFn !== fn) {
-      this.instantiateChildrenFn = fn
+    if (!this.instantiateChildren.includes(fn)) {
+      this.instantiateChildren.push(fn)
       this.render('recreateChildren')
     }
     return this
@@ -82,7 +82,7 @@ export class UIComponent<P extends UIComponentProps> {
   }
 
   // Rendering
-  
+
   protected willDomUpdate = false
   protected affectSet = new Set<ObserveAffect>()
   render(affect1: ObserveAffect, affect2?: ObserveAffect) {
@@ -121,10 +121,10 @@ export class UIComponent<P extends UIComponentProps> {
         this.childrenColl = undefined
       }
 
-      if (this.instantiateChildrenFn !== undefined) {
+      if (this.instantiateChildren.length > 0) {
         const p = UIComponent.activeParent
         UIComponent.activeParent = this
-        this.instantiateChildrenFn()
+        this.instantiateChildren.forEach(f => f())
         UIComponent.activeParent = p
       }
     } else if (this.affectSet.has('affectsChildrenProps')) {
