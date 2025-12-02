@@ -225,6 +225,11 @@ export class UIComponent<P extends UIComponentProps> {
     this.dom.addEventListener('input', callback)
     return this
   }
+
+  onChange(callback: (event: Event) => void) {
+    this.dom.addEventListener('change', callback)
+    return this
+  }
 }
 
 
