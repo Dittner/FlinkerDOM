@@ -862,6 +862,7 @@ export interface InputProps extends UIComponentProps {
   caretColor?: string
   autoFocus?: boolean
   spellCheck?: boolean
+  autoResize?: boolean
   autoCorrect?: TurnType
   autoComplete?: TurnType
 }
@@ -870,7 +871,13 @@ export class Input<P extends InputProps> extends UIComponent<P> {
   bind(rx: RXObservableValue<string>) {
     this.unsubscribeColl.push(
       rx.pipe()
-        .onReceive(v => (this.dom as HTMLTextAreaElement).value = v)
+        .onReceive(v => {
+          (this.dom as HTMLTextAreaElement).value = v
+          if (this.props.autoResize) {
+            this.dom.style.height = 'auto'
+            this.dom.style.height = this.dom.scrollHeight + 'px'
+          }
+        })
         .subscribe())
 
     this.onInput((e: any) => rx.value = e.target.value)
@@ -931,6 +938,10 @@ export class Input<P extends InputProps> extends UIComponent<P> {
     this.props.caretColor && this.dom.setAttribute('caretColor', this.props.caretColor)
     this.dom.spellcheck = this.props.spellCheck ?? false
     if (this.props.autoFocus) this.dom.focus()
+    if (this.props.autoResize) {
+      this.dom.style.height = 'auto'
+      this.dom.style.height = this.dom.scrollHeight + 'px'
+    }
   }
 }
 
