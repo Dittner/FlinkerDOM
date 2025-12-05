@@ -1,4 +1,4 @@
-import { RXObservable, RXObservableValue } from 'flinker'
+import { RX, RXObservable, RXObservableValue } from 'flinker'
 import { buildClassName, UIComponentProps } from './core'
 import { PseudoClassType } from './processor'
 
@@ -938,10 +938,11 @@ export class Input<P extends InputProps> extends UIComponent<P> {
     this.props.caretColor && this.dom.setAttribute('caretColor', this.props.caretColor)
     this.dom.spellcheck = this.props.spellCheck ?? false
     if (this.props.autoFocus) this.dom.focus()
-    if (this.props.autoResize) {
-      this.dom.style.height = 'auto'
-      this.dom.style.height = this.dom.scrollHeight + 'px'
-    }
+    if (this.props.autoResize)
+      RX.delayedComplete(0).pipe().onComplete(() => {
+        this.dom.style.height = 'auto'
+        this.dom.style.height = this.dom.scrollHeight + 'px'
+      })
   }
 }
 
