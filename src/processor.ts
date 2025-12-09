@@ -31,7 +31,6 @@ const abbreviations: Record<string, string> = {
   'font-weight': 'FW',
   'gap': 'G',
   'height': 'H',
-  'href': 'HR',
   'justify-content': 'J',
   'left': 'L',
   'letter-spacing': 'LS',

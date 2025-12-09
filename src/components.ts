@@ -500,14 +500,12 @@ export const btn = <P extends ButtonProps>() => {
 **/
 
 export interface LinkProps extends ButtonProps {
-  href?: string
   target?: '_self' | '_blank' | '_parent'
 }
 
 export class LinkBtn<P extends LinkProps> extends Button<P> {
   protected override didDomUpdate(): void {
     super.didDomUpdate()
-    this.props.href && this.dom.setAttribute('href', this.props.href)
     this.props.target && this.dom.setAttribute('target', this.props.target)
   }
 }

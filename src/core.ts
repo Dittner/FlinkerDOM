@@ -163,7 +163,6 @@ const RuleBuilder = (): RuleBuilderInterface => {
     setValue('-webkit-user-select', value ? 'text' : 'none', false)
   }
 
-  operator.href = (value: string) => { setValue('href', value) }
   operator.target = (value: string) => { setValue('target', value) }
 
   operator.bgImageSrc = (value: string) => { setValue('background-image', 'url(' + value + ')') }
