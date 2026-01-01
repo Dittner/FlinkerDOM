@@ -144,7 +144,7 @@ export class UIComponent<P extends UIComponentProps> {
       if (!res.pseudo) res.pseudo = {} as Record<PseudoClassType, Record<string, any>>
       const state = {} as P
       this.whenHoveredFn(state)
-      res.pseudo['hover'] = state
+      res.pseudo[':hover'] = state
     }
     if (this.mapStateFn) this.mapStateFn(res)
     if (this.props.visible === false) this.props = {} as P
@@ -464,7 +464,7 @@ export class Button<P extends ButtonProps> extends Text<P> {
       if (!res.pseudo) res.pseudo = {} as Record<PseudoClassType, Record<string, any>>
       const state = {} as P
       this.whenHoveredFn(state)
-      res.pseudo['hover'] = state
+      res.pseudo[':hover'] = state
     }
 
     if (!this.childrenColl)
@@ -903,21 +903,21 @@ export class Input<P extends InputProps> extends UIComponent<P> {
       if (!res.pseudo) res.pseudo = {} as Record<PseudoClassType, Record<string, any>>
       const state = {} as P
       this.whenHoveredFn(state)
-      res.pseudo['hover'] = state
+      res.pseudo[':hover'] = state
     }
 
     if (this.whenFocusedFn) {
       if (!res.pseudo) res.pseudo = {} as Record<PseudoClassType, Record<string, any>>
       const state = {} as P
       this.whenFocusedFn(state)
-      res.pseudo['focus'] = state
+      res.pseudo[':focus'] = state
     }
 
     if (this.whenPlaceholderShownFn) {
       if (!res.pseudo) res.pseudo = {} as Record<PseudoClassType, Record<string, any>>
       const state = {} as P
       this.whenPlaceholderShownFn(state)
-      res.pseudo['placeholder'] = state
+      res.pseudo['::placeholder'] = state
     }
 
     if (this.mapStateFn) this.mapStateFn(res)

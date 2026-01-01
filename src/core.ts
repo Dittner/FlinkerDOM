@@ -137,6 +137,7 @@ const RuleBuilder = (): RuleBuilderInterface => {
   operator.borderRight = (value: string | [string, string, string]) => { setValue('border-right', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderTop = (value: string | [string, string, string]) => { setValue('border-top', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderBottom = (value: string | [string, string, string]) => { setValue('border-bottom', Array.isArray(value) ? value.join(' ') : value) }
+  operator.content = (value: string) => { setValue('content', value) }
   operator.cornerRadius = (value: string) => { setValue('border-radius', value) }
   operator.opacity = (value: string) => { setValue('opacity', value) }
   operator.shadow = (value: string) => { setValue('box-shadow', value) }
@@ -165,6 +166,7 @@ const RuleBuilder = (): RuleBuilderInterface => {
 
   operator.target = (value: string) => { setValue('target', value) }
 
+  operator.bgImage = (value: string) => { setValue('background-image', value) }
   operator.bgImageSrc = (value: string) => { setValue('background-image', 'url(' + value + ')') }
   operator.bgImageRepeat = (value: string) => { setValue('background-repeat', value) }
   operator.bgImageSize = (value: string) => { setValue('background-size', value) }
@@ -233,6 +235,7 @@ export interface UIComponentProps {
   bgImageRepeat?: 'no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y' | 'unset' | 'space' | 'inherit'
   bgImageSize?: 'cover' | 'contain' | 'auto' | 'inherit'
   bgImageSrc?: string
+  bgImage?: string
   blur?: string //15px
   borderColor?: string
   border?: string | [string, BorderStyle, string]
@@ -246,6 +249,7 @@ export interface UIComponentProps {
   children?: any
   className?: string
   cornerRadius?: string
+  content?: string
   cursor?: 'auto' | 'pointer' | 'wait' | 'crosshair' | 'not-allowed' | 'zoom-in' | 'grab' | 'inherit'
   disableHorizontalScroll?: boolean
   disableScroll?: boolean

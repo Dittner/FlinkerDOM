@@ -1,4 +1,4 @@
-import { type RulePriority } from './core'
+import { type RulePriority } from './core';
 
 const abbreviations: Record<string, string> = {
   'align-items': 'A',
@@ -19,6 +19,7 @@ const abbreviations: Record<string, string> = {
   'box-shadow': 'BS',
   'caret-color': 'CC',
   'color': 'C',
+  'content': 'CO',
   'cursor': 'CU',
   'display': 'D',
   'flex-direction': 'F',
@@ -73,19 +74,22 @@ const abbreviations: Record<string, string> = {
   'z-index': 'Z'
 }
 
+const pseudoClasses = ['none', ':hover', ':focus', '::placeholder', '::before'] as const
+export type PseudoClassType = typeof pseudoClasses[number];
+
 export class StyleSheetProcessor {
   private readonly hash = new Map<PseudoClassType, PseudoClass>()
   private readonly list = Array.of<PseudoClass>()
+  static echo = false
 
   constructor(styleSheet: CSSStyleSheet) {
-    const all: PseudoClassType[] = ['none', 'hover', 'focus', 'placeholder']
-    all.forEach(t => {
-      if (t === 'hover') {
+    pseudoClasses.forEach(t => {
+      if (t === ':hover') {
         const pc = new HoverPseudoClass(styleSheet)
-        this.hash.set('hover', pc)
+        this.hash.set(':hover', pc)
         this.list.push(pc)
       } else {
-        const pc = new PseudoClass(t, styleSheet, t === 'placeholder' ? '::' : ':')
+        const pc = new PseudoClass(t, styleSheet)
         this.hash.set(t, pc)
         this.list.push(pc)
       }
@@ -114,25 +118,23 @@ export class StyleSheetProcessor {
   }
 }
 
-export type PseudoClassType = 'none' | 'hover' | 'focus' | 'placeholder'
 export class PseudoClass {
   readonly type: PseudoClassType
   readonly styleSheet: CSSStyleSheet
   style: string
   hashSum: string
-  readonly divider: string
-  constructor(type: PseudoClassType, styleSheet: CSSStyleSheet, divider:string = ':') {
+  constructor(type: PseudoClassType, styleSheet: CSSStyleSheet) {
     this.type = type
     this.styleSheet = styleSheet
     this.style = ''
     this.hashSum = ''
-    this.divider = divider
   }
 
   insertRule(className: string, tag: string) {
     if (this.style) {
-      const rule = tag + '.' + className + (this.type === 'none' ? '' : this.divider + this.type) + '{' + this.style + '}'
+      const rule = tag + '.' + className + (this.type === 'none' ? '' : this.type) + '{' + this.style + '}'
       this.styleSheet.insertRule(rule)
+      if (StyleSheetProcessor.echo) console.log(`StyleSheetProcessor: new rule: ${rule}`)
     }
   }
 
@@ -161,7 +163,7 @@ class HoverPseudoClass extends PseudoClass {
   readonly isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
 
   constructor(styleSheet: CSSStyleSheet) {
-    super('hover', styleSheet)
+    super(':hover', styleSheet)
   }
 
   insertRule(className: string, tag: string) {
