@@ -3,7 +3,8 @@ import { type RulePriority } from './core';
 const abbreviations: Record<string, string> = {
   'align-items': 'A',
   'backdrop-filter': 'BF',
-  'background-color': 'BG',
+  'background': 'BG',
+  'background-color': 'BGC',
   'background-image': 'BI',
   'background-attachment': 'BIA',
   'background-repeat': 'BIR',
@@ -41,6 +42,7 @@ const abbreviations: Record<string, string> = {
   'margin-right': 'MR',
   'margin-top': 'MT',
   'margin-bottom': 'MB',
+  'mask-image': 'MI',
   'max-height': 'MAH',
   'max-width': 'MAW',
   'min-height': 'MIH',

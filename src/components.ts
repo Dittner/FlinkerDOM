@@ -201,6 +201,21 @@ export class UIComponent<P extends UIComponentProps> {
     return this
   }
 
+  onMouseOver(callback: (event: MouseEvent) => void) {
+    this.dom.addEventListener('mouseover', callback)
+    return this
+  }
+
+  onMouseOut(callback: (event: MouseEvent) => void) {
+    this.dom.addEventListener('mouseout', callback)
+    return this
+  }
+
+  onMouseLeave(callback: (event: MouseEvent) => void) {
+    this.dom.addEventListener('mouseleave', callback)
+    return this
+  }
+
   onKeyUp(callback: (event: KeyboardEvent) => void) {
     this.dom.addEventListener('keyup', callback)
     return this

@@ -166,11 +166,13 @@ const RuleBuilder = (): RuleBuilderInterface => {
 
   operator.target = (value: string) => { setValue('target', value) }
 
+  operator.bg = (value: string) => { setValue('background', value) }
   operator.bgImage = (value: string) => { setValue('background-image', value) }
   operator.bgImageSrc = (value: string) => { setValue('background-image', 'url(' + value + ')') }
   operator.bgImageRepeat = (value: string) => { setValue('background-repeat', value) }
   operator.bgImageSize = (value: string) => { setValue('background-size', value) }
   operator.bgImageAttachment = (value: string) => { setValue('background-attachment', value) }
+  operator.maskImage = (value: string) => { setValue('mask-image', value) }
 
   operator.animate = (value: string) => { setValue('transition', value) }
   operator.animateAll = (value: string) => { setValue('transition', 'all ' + value) }
@@ -230,6 +232,7 @@ export interface UIComponentProps {
   alignItems?: 'normal' | 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'baseline' | 'inherit'
   animate?: string //'background-color 300ms'
   animateAll?: string //'300ms'
+  bg?: string
   bgColor?: string
   bgImageAttachment?: 'scroll' | 'fixed' | 'unset' | 'inherit'
   bgImageRepeat?: 'no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y' | 'unset' | 'space' | 'inherit'
@@ -279,6 +282,7 @@ export interface UIComponentProps {
   marginRight?: string
   marginTop?: string
   marginVertical?: string
+  maskImage?: string
   mouseEnabled?: boolean
   minHeight?: string
   minWidth?: string
