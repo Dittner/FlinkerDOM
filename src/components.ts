@@ -312,7 +312,6 @@ export const vstack = <P extends StackProps>() => {
       s.alignItems = 'flex-start'
       s.justifyContent = 'center'
       s.width = '100%'
-      s.gap = '10px'
       s.boxSizing = 'border-box'
     })
     .map(vstackMapper)
@@ -781,7 +780,6 @@ export const vlist = <T>() => {
       s.alignItems = 'flex-start'
       s.justifyContent = 'center'
       s.width = '100%'
-      s.gap = '10px'
       s.boxSizing = 'border-box'
     })
     .map(vstackMapper)
