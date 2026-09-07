@@ -738,7 +738,7 @@ export class List<T, P extends UIComponentProps> extends UIComponent<P> {
   private recreateChildren() {
     const actualItemsHash: any[] = []
     const actualItems = this._itemsFn ? [...this._itemsFn()] : []
-    const actualChildren = []
+    const actualChildren: AnyUIComponent[] = []
     let index = 0
     if (!this.childrenColl) this.childrenColl = []
 
@@ -838,6 +838,7 @@ export const spacer = () => {
 export interface ImageProps extends UIComponentProps {
   src?: string
   alt?: string
+  loading?: 'eager' | 'lazy'
 }
 
 export class Image<P extends ImageProps> extends Button<P> {
@@ -845,6 +846,7 @@ export class Image<P extends ImageProps> extends Button<P> {
     super.didDomUpdate()
     this.props.src && this.dom.setAttribute('src', this.props.src)
     this.props.alt && this.dom.setAttribute('alt', this.props.alt)
+    this.props.loading && this.dom.setAttribute('loading', this.props.loading)
   }
 }
 
