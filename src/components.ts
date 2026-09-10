@@ -391,7 +391,7 @@ export class Text<P extends TextProps> extends UIComponent<P> {
     if (!this.childrenColl)
       this.dom.textContent = this.props.text ?? null
     if (this.props.htmlText !== undefined)
-      this.dom.setHTMLUnsafe(this.props.htmlText)
+      this.dom.innerHTML = this.props.htmlText
   }
 }
 
