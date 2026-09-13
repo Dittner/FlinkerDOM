@@ -2,7 +2,7 @@ import { RX, RXObservable, RXObservableValue } from 'flinker'
 import { buildClassName, UIComponentProps } from './core'
 import { PseudoClassType } from './processor'
 
-export type HtmlTag = 'div' | 'button' | 'a' | 'link' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'img' | 'input' | 'textarea'
+export type HtmlTag = 'div' | 'button' | 'a' | 'link' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'img' | 'input' | 'textarea' | 'iframe'
 export type AnyUIComponent = UIComponent<any>
 
 /*
@@ -831,7 +831,7 @@ export const spacer = () => {
 
 /*
 *
-* image
+* img
 *
 **/
 
@@ -852,6 +852,29 @@ export class Image<P extends ImageProps> extends Button<P> {
 
 export const image = <P extends ImageProps>() => {
   return new Image<P>('img')
+}
+
+/*
+*
+* iframe
+*
+**/
+
+export interface FrameProps extends UIComponentProps {
+  src?: string
+  //frameborder?: string
+}
+
+export class Frame<P extends FrameProps> extends UIComponent<P> {
+  protected override didDomUpdate(): void {
+    super.didDomUpdate()
+    this.props.src && this.dom.setAttribute('src', this.props.src)
+    //this.props.alt && this.dom.setAttribute('frameborder', this.props.frameborder)
+  }
+}
+
+export const iframe = <P extends FrameProps>() => {
+  return new Frame<P>('iframe')
 }
 
 
